@@ -1,0 +1,9 @@
+# macOS Desktop Services Store
+.DS_Store
+
+# python cache
+__pycache__/
+
+# pygbag web cache
+web-cache/
+version.txt
