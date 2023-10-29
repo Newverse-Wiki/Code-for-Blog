@@ -29,6 +29,7 @@ class Game:
     def generate(self, position):
         radius = 20
         speed = 200
+        # 速度方向随机
         angle = random.random() * 2.0 * math.pi
         velocity = (speed * math.cos(angle), speed * math.sin(angle))
 
