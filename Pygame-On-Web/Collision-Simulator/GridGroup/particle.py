@@ -10,6 +10,8 @@ class Particle(pygame.sprite.Sprite):
         self.radius  = radius
         self.density = density
         self.mass    = density * radius ** 2
+        
+        self.elasticity = 0.95
 
         # 密度越大，蓝色越深
         rg_value = 200 - density * 10
@@ -64,8 +66,8 @@ class Particle(pygame.sprite.Sprite):
             v1n = v1 - 2 * m2 / (m1 + m2) * (v1 - v2).dot(r1 - r2) / (r1 - r2).length_squared() * (r1 - r2)
             v2n = v2 - 2 * m1 / (m1 + m2) * (v2 - v1).dot(r2 - r1) / (r2 - r1).length_squared() * (r2 - r1)
 
-            p1.velocity = v1n
-            p2.velocity = v2n
+            p1.velocity = v1n * self.elasticity
+            p2.velocity = v2n * self.elasticity
 
             separation.scale_to_length(overlap)
             p1.position += 0.5 * separation
