@@ -67,6 +67,7 @@ class Game:
         particles = pygame.sprite.Group()
         grid = GridGroup(max_radius * 2)
         self.generate(max_radius, [particles, grid], grid)
+        # 记录并显示游戏中粒子总数
         total_num = 1
 
         # 游戏运行控制变量（gamen_running）
@@ -91,12 +92,13 @@ class Game:
                 # 点击关闭窗口按钮或关闭网页
                 if event.type == pygame.QUIT:
                     game_running = False
-                # 按 P 键添加一个随机粒子
                 if event.type == pygame.KEYDOWN:
+                    # 按 P 键添加随机粒子
                     if event.key == pygame.K_p:
                         total_num += 100
                         for i in range(100):
                             self.generate(max_radius, [particles, grid], grid)
+                    # 按 G 键切换碰撞检测算法
                     if event.key == pygame.K_g:
                         gridding = not gridding
 
@@ -104,8 +106,11 @@ class Game:
             screen.fill(screen_color)
 
             if gridding or total_num > 801:
+                # 调用 GridGroup 类的 update() 函数，更新粒子状态
                 grid.update(dt)
+                # 调用 GridGroup 类的 draw() 函数，绘制粒子
                 grid.draw(screen)
+                # 调用 debug 函数在游戏界面右上角显示碰撞检测算法
                 debug.debug("Gridding", 'red', 'topright')
             else:
                 list_particles = particles.sprites()
