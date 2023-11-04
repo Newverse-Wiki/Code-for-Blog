@@ -17,7 +17,9 @@ class Widget(pygame.sprite.Sprite):
         self.info = str(info)
         self.pykey = eval("pygame.K_" + keys.lower())
 
+        # 定义组件的响应外观类别
         self.reactions = ['disable', 'normal', 'active']
+        # 定义组件的响应状态
         self.is_available = True
         self.is_active = False
 
@@ -34,6 +36,7 @@ class Widget(pygame.sprite.Sprite):
         return self.pad_surf(surf)
 
     def pad_surf(self, inner_surf):
+        # 为部件显示内容添加内边距 padding
         size = (inner_surf.get_width()  + 2 * self.padding, 
                 inner_surf.get_height() + 2 * self.padding)
         surf = pygame.Surface(size)
@@ -43,32 +46,50 @@ class Widget(pygame.sprite.Sprite):
         return surf
 
     def arrange_surfs(self, surfs, active_id = -1):
+        """ 将所有部件水平排列，竖直居中绘制到组件平面上
+
+        arrange_surfs(surfs, active_id)
+
+        surfs: 所有部件平面的列表
+        active_id: 鼠标响应部件序号，-1 为整个组件
+        """
+
+        # 确定组件高度，部件上下边缘间距最小为 margin
         height = max([surf.get_height() for surf in surfs]) + 2 * self.margin
         
-        x = 0
+        # 确定所有部件位置
+        x = self.margin
         rects = []
         for surf in surfs:
-            x += self.margin
             # 竖直居中对齐
             rects.append(surf.get_rect(midleft = (x, height / 2)))
+            # 水平间距为 margin
             x = rects[-1].right + self.margin
+        # 确定组件宽度
         width = x
         
         surf = pygame.Surface((width, height))
         surf.set_colorkey('black')
+        # 同时绘制所有部件
         surf.blits(zip(surfs, rects))
 
+        # 返回组件平面以及鼠标响应区域
         if active_id < 0:
+            # 默认鼠标响应区域为整个组件
             return surf, surf.get_rect().copy()
         else:
+            # 可指定鼠标响应区域为某个部分
             return surf, rects[active_id]
 
     def align_active(self, offset):
+        # 将响应区域与组件在屏幕上的绘制位置对齐
         self.active_rect.x += self.rect.x
         self.active_rect.y += self.rect.y
+        # 消除响应区域的内外边距
         self.active_rect.inflate_ip(-2 * offset, -2 * offset)
 
     def update(self, pos, pressed):
+        # 当组件绑定的快捷键被按下或鼠标掠过组件的响应区域
         if pressed[self.pykey] or self.active_rect.collidepoint(pos):
             self.is_active = True
         else:
@@ -86,8 +107,10 @@ class Switch(Widget):
 
         self.radius = int(self.font.get_height() / 2)
 
+        # 定义开关状态
         self.states = ['off', 'on']
 
+        # 定义不同开关状态以及响应状态下组件的配色
         self.color_text   = {'off': 'gray', 'on': 'white'}
         self.color_switch = {'off': 'red',  'on': 'green'}
 
@@ -104,6 +127,7 @@ class Switch(Widget):
                                      'normal':  'gray', 
                                      'active':  'white'}}
 
+        # 绘制不同状态下组件的外观
         self.images = {}
         for state in self.states:
             self.images[state] = {}
@@ -113,6 +137,7 @@ class Switch(Widget):
         self.rect = self.image.get_rect(topleft = position)
         self.align_active(self.padding)
 
+    # 根据组件的响应状态，渲染不同的组件外观
     @property
     def image(self):
         if self.is_available:
@@ -178,10 +203,12 @@ class Button(Widget):
 
         self.border_width = 2
 
+        # 定义组件的响应外观类别对应的颜色
         self.color = {'disable': 'gray',
                       'normal':  'gray', 
                       'active':  'white'}
 
+        # 生成不同响应状态下的组件外观
         self.images = {}
         for react in self.reactions:
             self.images[react] = self.init_image(react)
@@ -189,6 +216,7 @@ class Button(Widget):
         self.rect = self.image.get_rect(topleft = position)
         self.align_active(self.margin)
 
+    # 根据组件的响应状态，渲染不同的组件外观
     @property
     def image(self):
         if self.is_available:

@@ -105,6 +105,7 @@ class Game:
                     if event.key == pygame.K_g:
                         switch_grid.switch()
                 elif event.type == pygame.MOUSEMOTION:
+                    # 当鼠标移动时更新鼠标所在位置
                     mouse_pos = event.pos
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     uis.on_click(event.pos, 100, max_radius, [particles, grid], grid)
@@ -114,9 +115,10 @@ class Game:
             
             list_particles = particles.sprites()
             total_num = len(list_particles)
+            # 当粒子总数超过 801 时，启用网格算法，禁用算法切换功能
             if total_num > 801:
-                switch_grid.is_available = False
                 switch_grid.is_on = True
+                switch_grid.is_available = False
             else:
                 switch_grid.is_available = True
 
@@ -137,6 +139,7 @@ class Game:
                 # 调用 Group 类的 draw() 函数，绘制粒子
                 particles.draw(screen)
 
+            # 根据鼠标位置和键盘按键信息更新组件的外观渲染
             uis.update(mouse_pos, pygame.key.get_pressed())
             uis.draw(screen)
 
