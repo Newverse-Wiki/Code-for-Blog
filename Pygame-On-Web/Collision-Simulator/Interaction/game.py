@@ -87,6 +87,7 @@ class Game:
             # dt 记录上一帧接受之后经历的时间，单位为秒 m
             # 使用 dt 控制物体运动可以使游戏物理过程与帧率无关
             dt = clock.tick(self.FPS) / 1000.0
+            pygame.display.set_caption(f"Collision Simulation [FPS={clock.get_fps():.1f}]")
             # 使用 asyncio 同步
             # 此外游戏主体代码中不需要再考虑 asyncio
             await asyncio.sleep(0)

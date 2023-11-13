@@ -6,4 +6,5 @@ __pycache__/
 
 # pygbag web cache
 web-cache/
+build/
 version.txt
